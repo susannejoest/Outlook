@@ -1,0 +1,46 @@
+AD - use server
+Advanced view must be active
+pick 'custom search'
+tab: advanced
+
+Look up user
+(&(objectClass=user)(objectCategory=person)(|(sAMAccountName=joest)))
+
+find user by SID
+objectSID=S-1-5-21-2243409727-1932076522-4076522751-195214
+
+find/verify mailbox alias (returns mailbox name)
+proxyAddresses=smtp:DataPrivacyAdministrationTeam@takeda.com
+
+Find user
+dsGetProperty(sUser, "eucanlegalinsync@takeda.com")
+
+
+
+power shell
+
+$Domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+$Root = $Domain.GetDirectoryEntry()
+$Searcher = [System.DirectoryServices.DirectorySearcher]$Root
+
+$Searcher.Filter = "(&(objectCategory=person)(objectClass=user))"
+$Searcher.PropertiesToLoad.Add("sAMAccountName") > $Null
+$Searcher.PropertiesToLoad.Add("distinguishedName") > $Null
+$Searcher.PropertiesToLoad.Add("proxyAddresses") > $Null
+
+$Results = $Searcher.FindAll()
+
+ForEach ($User In $Results) {
+  $DN = $User.Properties.Item("distinguishedName")
+  $Name = $User.Properties.Item("sAMAccountName")
+  $Found = $False
+  $Addresses = $User.Properties.Item("proxyAddresses")
+  ForEach ($Address In $Addresses) {
+    If ($Address -eq "$DataPrivacyAdministrationTeam@takeda.com") {
+      $Found = $True
+    }
+  }
+ 
+}
+
+

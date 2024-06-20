@@ -1,0 +1,3 @@
+proxyaddresses=smtp:eucandataprivacy@takeda.com
+
+to see the 'Security' tab, you must enable 'View'-> 'Advanced Features' in 'Active Directory users and computers'
